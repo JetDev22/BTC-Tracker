@@ -9,16 +9,12 @@ import time
 
 console = Console()
 
-# Markdown Texts
-titleBig = Markdown("""# BTC TRACKER""")
-welcome = Markdown("""# WELCOME TO CLI BTC TRACKER - by JetDev22""")
-
 # BTC Symbol
 btcLogo = u"\u20BF"
 
 # Setup Prompt
 os.system("clear")
-console.print(welcome)
+console.print(Markdown("""# WELCOME TO CLI BTC TRACKER - by JetDev22"""))
 print("Before we begin, lets setup your portfolio:")
 print("-----------------------------------------------------------")
 fiat = input("1. What fiat currency do you wish to use (EUR / USD)? ")
@@ -29,7 +25,6 @@ print("---- Optional: Leave blank if not needed ----")
 dca = input("4. What is your dollar cost average amount? ")
 
 # Set FIAT symbol
-fiatSymbol = ""
 if fiat == "EUR":
     fiatSymbol = "€"
 else:
@@ -47,29 +42,27 @@ print("-----------------------------------------------------------")
 for i in track(range(5), description="Switchig to BTC Tracker ", complete_style="green"):
     time.sleep(1)
 
-# Markdown Texts
-titleBig = Markdown("""# BTC TRACKER""")
 
 # Main Loop
 while True:
     os.system("clear")
     # get current BTC price
     currentPrice = round(currency(fiat), 2)
-    # calculate current portfolio value
+
+    # Calculations
     portfolioCurrent = round(currentPrice * float(coins), 2)
-    # calculate current win or loss
     gainOrLoss = round(portfolioCurrent - portfolioCost, 2)
     roi = round(((portfolioCurrent - portfolioCost) / portfolioCost) * 100, 2)
+
     # Generate Table 
+    titleBig = Markdown("""# BTC TRACKER""")
     table = Table(show_header=True, header_style="bold yellow", title_justify="center", width=68, title=titleBig)
-    # Generate Columns
     table.add_column("DATAPOINT", justify="left", style="bold")
     if gainOrLoss > 0:
         table.add_column("RESULT", justify="right", style="green")
     else:
         table.add_column("RESULT", justify="center", style="red")
     table.add_column("UNIT", justify="center", style="bold")
-    # Generate Rows
     table.add_row("CURRENT BTC PRICE", str(currentPrice), fiatSymbol)
     table.add_row("COINS HELD", str(coins), btcLogo)
     # Check if Profit or loss
@@ -85,9 +78,9 @@ while True:
         annualDCA = round(dcaFloat * 12, 2)
         table.add_row(dca+" "+fiatSymbol+ " DCA AMOUNTS TO", str(dcaBTC), btcLogo)
         table.add_row("DCA / YEAR", str(annualDCA), fiatSymbol)
-    # Print Table
     console.print(table)
-    print("")
+    
     # Progress-Bar
+    print("")
     for i in track(range(60), description="Refreshing in", complete_style="green"):
         time.sleep(1)
