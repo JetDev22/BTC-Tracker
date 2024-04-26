@@ -89,5 +89,5 @@ while True:
     console.print(table)
     print("")
     # Progress-Bar
-    for i in track(range(20), description="Refreshing in", complete_style="green"):
+    for i in track(range(60), description="Refreshing in", complete_style="green"):
         time.sleep(1)
