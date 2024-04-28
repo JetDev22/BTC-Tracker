@@ -6,10 +6,16 @@ I wrote this tracker to use an i2c 16x2 display that I had around, to put it to 
 The connection pinout for Raspberry Pi:
 
 The program starts with a cli setup where you enter:
+
+<img src="setup.png" width=600px />
+
 1. Which currency you want to use (EUR / USD)
 2. How many BTC you own
 3. Your cost for those BTC (you can see this in you portfolio tracker)
 4. What you DCA amount is (optional)
+
+
+<img src="setup2.png" width=600px />
 
 This will give you following output on your 16x2 Display:
 1. Page 1 -> Current BTC Price / Coin amount you own
@@ -24,6 +30,8 @@ Software used:
 ## 2. Rich-CLI-Tracker
 
 This follows the same idea but will stay in the CLI and display a summary in your command line. 
+
+<img src="summary.png" width=600px />
 
 Software used:
 
