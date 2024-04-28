@@ -65,6 +65,7 @@ while True:
     table.add_column("UNIT", justify="center", style="bold")
     table.add_row("CURRENT BTC PRICE", str(currentPrice), fiatSymbol)
     table.add_row("COINS HELD", str(coins), btcLogo)
+    table.add_row("PORTFOLIO VALUE", str(portfolioCurrent), fiatSymbol)
     # Check if Profit or loss
     if gainOrLoss > 0:
         table.add_row("PROFIT", str(gainOrLoss), fiatSymbol)
