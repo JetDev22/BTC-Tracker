@@ -23,6 +23,7 @@ coins = input("2. How many BTC do you have? ")
 cost = input("3. What was the average cost for your BTC? ")
 print("---- Optional: Leave blank if not needed ----")
 dca = input("4. What is your dollar cost average amount? ")
+predictions = input("5. Display portfolio 'what if' predictions (Y/N)? ")
 
 # Set FIAT symbol
 if fiat == "EUR":
@@ -79,7 +80,22 @@ while True:
         annualDCA = round(dcaFloat * 12, 2)
         table.add_row(dca+" "+fiatSymbol+ " DCA AMOUNTS TO", str(dcaBTC), btcLogo)
         table.add_row("DCA / YEAR", str(annualDCA), fiatSymbol)
+    # Check if portfolio predictions are requested
+    predictions = predictions.upper()
+    if predictions == "Y":
+        pred0 = round(float(coins) * 100000, 2)
+        pred1 = round(float(coins) * 150000, 2)
+        pred2 = round(float(coins) * 200000, 2)
+        pred3 = round(float(coins) * 500000, 2)
+        pred4 = round(float(coins) * 1000000, 2)
+        table.add_row("Portfolio Predictions","","")
+        table.add_row("BTC @ 100,000 "+fiatSymbol, str(pred0), fiatSymbol)
+        table.add_row("BTC @ 150,000 "+fiatSymbol, str(pred1), fiatSymbol)
+        table.add_row("BTC @ 200,000 "+fiatSymbol, str(pred2), fiatSymbol)
+        table.add_row("BTC @ 500,000 "+fiatSymbol, str(pred3), fiatSymbol)
+        table.add_row("BTC @ 1,000,000 "+fiatSymbol, str(pred4), fiatSymbol)
     console.print(table)
+
     
     # Progress-Bar
     print("")
