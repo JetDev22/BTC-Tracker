@@ -5,7 +5,15 @@ import time
 # Init Display over i2c
 lcd = CharLCD('PCF8574', 0x27)
 
+# PinOut for 16x2 i2c
+# LCD <-> Pi
+# GND <-> GND
+# VCC <-> 5V
+# SDA <-> GPIO2 (i2c SDA)
+# SCL <-> GPIO3 (i2c SCL)
 # Setup Prompt for CLI
+
+
 print("Welcome to the 16x2 LCD BTC Tracker - By JetDev22")
 print("-------------------------------------------------")
 print("Before we begin, lets setup your portfolio:")
