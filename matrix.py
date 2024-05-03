@@ -1,10 +1,12 @@
 import time
-import sys
 import os
+import sys
+from PIL import Image
 from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 from bitcoin_value import currency
 from rich.markdown import Markdown
 from rich.console import Console
+from gpiozero import CPUTemperature
 
 # Matrix Conf
 options = RGBMatrixOptions()
@@ -39,9 +41,14 @@ dca = input("4. What is your dollar cost average amount? ")
 # Set FIAT symbol
 if fiat == "EUR":
     fiatSymbol = "€"
+else:
+    fiatSymbol = "$"
     
 # BTC Symbol
 btcLogo = u"\u20BF"
+
+# Load Images
+background = Image.open("background.png")
 
 # Calculate Portfolio Cost
 portfolioCost = round(float(cost) * float(coins), 2)
@@ -50,7 +57,7 @@ portfolioCost = round(float(cost) * float(coins), 2)
 print("-----------------------------------------------------------")
 print(f"          Your {btcLogo} Portfolio cost you {portfolioCost} {fiatSymbol}")
 print("-----------------------------------------------------------")
-console.print(Markdown("""# Led Matrix starting"""))
+console.print(Markdown("""# LED-Matrix starting"""))
 
 
 # Main Loop
@@ -71,18 +78,69 @@ while True:
         portfolioCurrent = round(currentPrice * float(coins), 2)
         gainOrLoss = round(portfolioCurrent - portfolioCost, 2)
         roi = round(((portfolioCurrent - portfolioCost) / portfolioCost) * 100, 2)
+        # Load CPU Temp
+        cpu = CPUTemperature()
+        cpuTemp = round(cpu.temperature, 2)
+
+        # Image Test
+        #matrix.SetImage(background.convert('RGB'))
+        #matrix.SetImage(btcImage.convert('RGB'))
+        #time.sleep(10)
+
+
         # Draw 1st Page
         line0 = graphics.DrawText(matrixScreen, font,1, pos_y,graphics.Color(255,255,100),"BTC")
-        line1 = graphics.DrawText(matrixScreen, font,1, 20,graphics.Color(color_R,color_G,color_B),str(currentPrice))
-        line2 = graphics.DrawText(matrixScreen, font,1, 25,graphics.Color(color_R,color_G,color_B),"----------")
+        line1 = graphics.DrawText(matrixScreen, font,1, 20,graphics.Color(000,204,102),str(currentPrice)+fiatSymbol)
+        line2 = graphics.DrawLine(matrixScreen, 0, 21, 64, 21,graphics.Color(255, 255, 255))
         line3 = graphics.DrawText(matrixScreen, font,1, 30,graphics.Color(255,255,100),"COINS")
-        line4 = graphics.DrawText(matrixScreen, font,1, 40,graphics.Color(color_R,color_G,color_B),str(coins))
-        line5 = graphics.DrawText(matrixScreen, font,1, 45,graphics.Color(color_R,color_G,color_B),"----------")
+        line4 = graphics.DrawText(matrixScreen, font,1, 40,graphics.Color(000,204,102),str(coins))
+        line5 = graphics.DrawLine(matrixScreen, 0, 41, 64, 41,graphics.Color(255, 255, 255))
         line6 = graphics.DrawText(matrixScreen, font,1, 50,graphics.Color(255,255,100),"PROFIT")
         if gainOrLoss > 0:
-            line7 = graphics.DrawText(matrixScreen, font,1, 60,graphics.Color(000,255,000),str(gainOrLoss))
+            line7 = graphics.DrawText(matrixScreen, font,1, 60,graphics.Color(000,255,000),str(gainOrLoss)+fiatSymbol)
         else:
-            line7 = graphics.DrawText(matrixScreen, font,1, 60,graphics.Color(255,000,000),str(gainOrLoss))
-        time.sleep(5)
+            line7 = graphics.DrawText(matrixScreen, font,1, 60,graphics.Color(255,000,000),str(gainOrLoss)+fiatSymbol)
+        time.sleep(20)
+        matrixScreen = matrix.SwapOnVSync(matrixScreen)
+        matrixScreen.Clear()
+
+
+        # Draw 2nd Page
+        line0 = graphics.DrawText(matrixScreen, font,1, pos_y,graphics.Color(255,255,100),"P. COST")
+        line1 = graphics.DrawText(matrixScreen, font,1, 20,graphics.Color(000,204,102),str(portfolioCost)+fiatSymbol)
+        line2 = graphics.DrawLine(matrixScreen, 0, 21, 64, 21,graphics.Color(255, 255, 255))
+        line3 = graphics.DrawText(matrixScreen, font,1, 30,graphics.Color(255,255,100),"P. VALUE")
+        # Check if portfolio loss or profit
+        if portfolioCurrent > portfolioCost:
+            line4 = graphics.DrawText(matrixScreen, font,1, 40,graphics.Color(000,255,000),str(portfolioCurrent)+fiatSymbol)
+        else:
+            line4 = graphics.DrawText(matrixScreen, font,1, 40,graphics.Color(255,000,000),str(portfolioCurrent)+fiatSymbol)
+        line5 = graphics.DrawLine(matrixScreen, 0, 41, 64, 41,graphics.Color(255, 255, 255))
+        line6 = graphics.DrawText(matrixScreen, font,1, 50,graphics.Color(255,255,100),"R.O.I")
+        # Check if overall loss or profit
+        if gainOrLoss > 0:
+            line7 = graphics.DrawText(matrixScreen, font,1, 60,graphics.Color(000,255,000),str(roi))
+        else:
+            line7 = graphics.DrawText(matrixScreen, font,1, 60,graphics.Color(255,000,000),str(roi))
+        time.sleep(20)
+        matrixScreen = matrix.SwapOnVSync(matrixScreen)
+        matrixScreen.Clear()
+
+
+        # Draw 3rd Page
+        line0 = graphics.DrawText(matrixScreen, font,1, pos_y,graphics.Color(255,255,100),"CPU TEMP")
+        line1 = graphics.DrawText(matrixScreen, font,1, 20,graphics.Color(000,204,102),str(cpuTemp)+"°C")
+        line2 = graphics.DrawLine(matrixScreen, 0, 21, 64, 21,graphics.Color(255, 255, 255))
+        # Check if DCA amount is given
+        if len(dca) != 0:
+            dcaFloat = float(dca)
+            dcaBTC = round(dcaFloat / currentPrice, 5)
+            annualDCA = round(dcaFloat * 12, 2)
+            line3 = graphics.DrawText(matrixScreen, font,1, 30,graphics.Color(255,255,100),"DCA")
+            line4 = graphics.DrawText(matrixScreen, font,1, 40,graphics.Color(000,204,102),str(dca)+fiatSymbol)
+            line5 = graphics.DrawLine(matrixScreen, 0, 41, 64, 41,graphics.Color(255, 255, 255))
+            line6 = graphics.DrawText(matrixScreen, font,1, 50,graphics.Color(255,255,100),"DCA - BTC")
+            line7 = graphics.DrawText(matrixScreen, font,1, 60,graphics.Color(000,204,102),str(dcaBTC))
+        time.sleep(20)
         matrixScreen = matrix.SwapOnVSync(matrixScreen)
         matrixScreen.Clear()
