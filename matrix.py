@@ -73,7 +73,11 @@ while True:
 
     while True:
         # Load current BTC Price
-        currentPrice = round(currency(fiat), 2)
+        try:
+            currentPrice = round(currency(fiat), 2)
+        except:
+            print("BTC price request failed - setting generic 50.000 until request completes")
+            currentPrice = 50000.00
         # Calculations
         portfolioCurrent = round(currentPrice * float(coins), 2)
         gainOrLoss = round(portfolioCurrent - portfolioCost, 2)
