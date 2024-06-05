@@ -33,6 +33,12 @@ This follows the same idea but will stay in the CLI and display a summary in you
 
 <img src="summary.png" width=600px />
 
+## 3. 64x64 Matrix LED Tracker
+
+This follows the same idea but cycles through data on matrix led
+
+<img src="matrix.png" width=600px />
+
 Software used:
 
 1. To track the BTC price I used [Bitcoin Value for Python](https://github.com/dewittethomas/bitcoin-value)
