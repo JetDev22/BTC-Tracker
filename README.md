@@ -41,5 +41,5 @@ This follows the same idea but cycles through data on matrix led
 
 Software used:
 
-1. To track the BTC price I used [Bitcoin Value for Python](https://github.com/dewittethomas/bitcoin-value)
+1. To track the BTC price I used [Bitcoin Price from Blockchain.info](https://blockchain.info/ticker)
 2. To style the CLI output I used [Rich](https://github.com/Textualize/rich)
